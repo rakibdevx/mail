@@ -73,7 +73,7 @@ class EmailController extends Controller
         // Mail::to($user)->send(new WelcomeMail($data));
         Mail::to($user)->queue(new WelcomeMail($data));
     }
-    function getConvertBody($content,$user): string
+    function getConvertBody($content,$user)
     {
         $site_title = env('APP_NAME');
         $search = array('{name}', '{network_name}', '{email}', '{data}','{link}','{user_type}','{offer_name}','{invoice_payout}','{invoice_id}');
