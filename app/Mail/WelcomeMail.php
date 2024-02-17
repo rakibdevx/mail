@@ -17,42 +17,23 @@ class WelcomeMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($data)
+    public function __construct($data,)
     {
         $this->data = $data;
     }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            subject: 'Welcome Mail',
-        );
+        $this->withSwiftMessage(function ($message) {
+            $message->setHeaders([
+                'X-My-Header' => 'my-header-value',
+                'Content-Type' => 'text/html; charset=UTF-8',
+                'Content-Transfer-Encoding' => 'base64',
+            ]);
+        });
+        $this->view('email.wellcome', [
+            'body' => $this->data['body'],
+        ])->subject($this->data['subject']);
     }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'email.wellcome',
-            with: [
-                'title' => $this->data['title'],
-                'body' => $this->data['body'],
-            ],
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
+   
 }
